@@ -167,5 +167,6 @@ typedef void (^SVProgressHUDDismissCompletion)(void);
 
 - (void)showInfoWithStatus:(nonnull NSString*)status;
 - (BOOL)isVisible;
+- (void)dismiss;
 @end
 
