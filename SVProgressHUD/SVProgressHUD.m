@@ -1614,4 +1614,9 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
 #endif
 }
 
+- (BOOL)isVisible {
+    // Checking one alpha value is sufficient as they are all the same
+    return self.backgroundView.alpha > 0.0f;
+}
+
 @end
