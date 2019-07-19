@@ -53,6 +53,7 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
 
 @property (nonatomic, readonly) CGFloat visibleKeyboardHeight;
 @property (nonatomic, readonly) UIWindow *frontWindow;
+@property (nonatomic, strong) UIWindow *targetWindow;
 
 #if TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= 100000
 @property (nonatomic, strong) UINotificationFeedbackGenerator *hapticGenerator NS_AVAILABLE_IOS(10_0);
@@ -76,7 +77,30 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
     return sharedView;
 }
 
+- (instancetype)initWithWindow:(nonnull UIWindow*)window {
+    self = [super initWithFrame:window.bounds];
+    if (self) {
+        self.targetWindow = window;
+    }
 
+    return self;
+}
+
+- (UIWindow *)preferredDelegateWindow {
+    if (self.targetWindow) {
+        return self.targetWindow;
+    } else {
+        return [[[UIApplication sharedApplication] delegate] window];
+    }
+}
+
+- (UIWindow *)preferredKeyWindow {
+    if (self.targetWindow) {
+        return self.targetWindow;
+    } else {
+        return [UIApplication sharedApplication].keyWindow;
+    }
+}
 #pragma mark - Setters
 
 + (void)setStatus:(NSString*)status {
@@ -626,10 +650,10 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
     double animationDuration = 0.0;
 
 #if !defined(SV_APP_EXTENSIONS) && TARGET_OS_IOS
-    self.frame = [[[UIApplication sharedApplication] delegate] window].bounds;
+    self.frame = self.preferredDelegateWindow.bounds;
     UIInterfaceOrientation orientation = UIApplication.sharedApplication.statusBarOrientation;
 #elif !defined(SV_APP_EXTENSIONS) && !TARGET_OS_IOS
-    self.frame= [UIApplication sharedApplication].keyWindow.bounds;
+    self.frame = self.preferredKeyWindow.bounds;
 #else
     if (self.viewForExtension) {
         self.frame = self.viewForExtension.frame;
@@ -1008,7 +1032,7 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
                     
                     // Tell the rootViewController to update the StatusBar appearance
 #if !defined(SV_APP_EXTENSIONS) && TARGET_OS_IOS
-                    UIViewController *rootController = [[UIApplication sharedApplication] keyWindow].rootViewController;
+                    UIViewController *rootController = self.preferredKeyWindow.rootViewController;
                     [rootController setNeedsStatusBarAppearanceUpdate];
 #endif
                     
@@ -1198,7 +1222,7 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
     
     // Update frames
 #if !defined(SV_APP_EXTENSIONS)
-    CGRect windowBounds = [[[UIApplication sharedApplication] delegate] window].bounds;
+    CGRect windowBounds = self.preferredDelegateWindow.bounds;
     _controlView.frame = windowBounds;
 #else
     _controlView.frame = [UIScreen mainScreen].bounds;
@@ -1344,6 +1368,9 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
     
 - (UIWindow *)frontWindow {
 #if !defined(SV_APP_EXTENSIONS)
+    if (self.targetWindow) {
+        return self.targetWindow;
+    }
     NSEnumerator *frontToBackWindows = [UIApplication.sharedApplication.windows reverseObjectEnumerator];
     for (UIWindow *window in frontToBackWindows) {
         BOOL windowOnMainScreen = window.screen == UIScreen.mainScreen;
