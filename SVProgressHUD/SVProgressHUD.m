@@ -78,7 +78,7 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
 }
 
 - (instancetype)initWithWindow:(nonnull UIWindow*)window {
-    self = [super initWithFrame:window.bounds];
+    self = [self initWithFrame:window.bounds];
     if (self) {
         self.targetWindow = window;
     }
