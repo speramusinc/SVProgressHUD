@@ -535,6 +535,7 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
 #endif
 
 - (void)updateMotionEffectForXMotionEffectType:(UIInterpolatingMotionEffectType)xMotionEffectType yMotionEffectType:(UIInterpolatingMotionEffectType)yMotionEffectType {
+#if !TARGET_OS_MACCATALYST
     UIInterpolatingMotionEffect *effectX = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x" type:xMotionEffectType];
     effectX.minimumRelativeValue = @(-SVProgressHUDParallaxDepthPoints);
     effectX.maximumRelativeValue = @(SVProgressHUDParallaxDepthPoints);
@@ -549,6 +550,7 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
     // Clear old motion effect, then add new motion effects
     self.hudView.motionEffects = @[];
     [self.hudView addMotionEffect:effectGroup];
+#endif
 }
 
 - (void)updateViewHierarchy {
