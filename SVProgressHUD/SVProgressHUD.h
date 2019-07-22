@@ -148,7 +148,7 @@ typedef void (^SVProgressHUDDismissCompletion)(void);
 
 + (NSTimeInterval)displayDurationForString:(nullable NSString*)string;
 
-- (nonnull instancetype)initWithWindow:(nonnull UIWindow*)window;
+- (nonnull instancetype)initWithView:(nonnull UIView*)view;
 
 - (NSTimeInterval)displayDurationForString:(nullable NSString*)string;
 

@@ -16,7 +16,12 @@ Pod::Spec.new do |s|
   s.resources    = 'SVProgressHUD/SVProgressHUD.bundle'
   s.requires_arc = true
 
-  subspec 'ExtensionSafe' do |sp|
+  s.subspec 'ExtensionSafe' do |sp|
     sp.compiler_flags = '-D SV_APP_EXTENSIONS'
+    sp.pod_target_xcconfig = { 'SV_APP_EXTENSIONS' => '1' }
+    sp.source_files = 'SVProgressHUD/*.{h,m}'
+    sp.framework    = 'QuartzCore'
+    sp.resources    = 'SVProgressHUD/SVProgressHUD.bundle'
+    sp.requires_arc = true
   end
 end
