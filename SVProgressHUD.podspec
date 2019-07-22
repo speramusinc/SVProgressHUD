@@ -15,4 +15,8 @@ Pod::Spec.new do |s|
   s.framework    = 'QuartzCore'
   s.resources    = 'SVProgressHUD/SVProgressHUD.bundle'
   s.requires_arc = true
+
+  subspec 'ExtensionSafe' do |sp|
+    sp.compiler_flags = '-D SV_APP_EXTENSIONS'
+  end
 end
